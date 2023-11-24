@@ -30,10 +30,10 @@ class TestMariaDBCustomerRepository {
 
         @Suppress("UNUSED_PARAMETER")
         private fun findSubstitution(line : String, vararg pairssss:  Array<out Pair<String, String>>) : String{
-            pairssss.forEach { (k, v) -> {
-                line.compareTo(k)
-            } }
-            return line;
+            pairssss.map { (k, v) -> 
+                if(line.contains("__"+ k + "__")) {}
+            };
+            return "";
         }
 
         @Suppress("UNUSED_PARAMETER")

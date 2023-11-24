@@ -3,6 +3,7 @@ package it.unibo.spe.compose
 import it.unibo.spe.compose.db.MariaDB
 import it.unibo.spe.compose.db.MariaDBConnectionFactory
 import it.unibo.spe.compose.impl.SqlCustomerRepository
+import it.unibo.spe.compose.TestMariaDBCustomerRepository
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
@@ -16,6 +17,7 @@ import kotlin.test.assertFailsWith
 
 class TestMariaDBCustomerRepository {
 
+    
     companion object {
         const val HOST = MariaDB.DEFAULT_HOST
         const val PORT = MariaDB.DEFAULT_PORT
@@ -26,8 +28,25 @@ class TestMariaDBCustomerRepository {
 
         private lateinit var composeFile: File
 
+        @Suppress("UNUSED_PARAMETER")
+        private fun findSubstitution(line : String, vararg pairssss:  Array<out Pair<String, String>>) : String{
+            pairssss.forEach { (k, v) -> {
+                line.compareTo(k)
+            } }
+            return line;
+        }
+
+        @Suppress("UNUSED_PARAMETER")
         private fun createComposeFile(path: File, vararg assignments: Pair<String, String>): File {
-            TODO("copy-paste the docker-compose.yml.template file into path, after applying the substitutions in assignments")
+         //TODO("copy-paste the docker-compose.yml.template file into path, after applying the substitutions in assignments")
+         val file = File( object {}.javaClass.getResource("docker-compose.yml.template").file )
+         val bufferedReader = file.bufferedReader()
+         val text:List<String> = bufferedReader.readLines()
+         val substitutedLines = text.map{ line -> this.findSubstitution(line, assignments)}
+         print(substitutedLines);
+            print(path);
+         return File.createTempFile("docker-compose", ".yml");
+
         }
 
         /**
@@ -35,11 +54,11 @@ class TestMariaDBCustomerRepository {
          * If async == false, waits for the command to terminate and asserts that the exit value is 0
          */
         private fun executeDockerCompose(vararg arguments: String): Process {
-            val command: MutableList<String> = TODO("call docker compose ensuring it will use $composeFile")
+            val command: MutableList<String> = mutableListOf<String>(); //TODO("call docker compose ensuring it will use $composeFile")
             command.addAll(arguments)
             return ProcessBuilder(command).inheritIO().start().also {
-                TODO("wait for the process to terminate")
-                TODO("assert that the exit value is 0 (i.e. make the test fail if the docker compose command fails")
+               // TODO("wait for the process to terminate")
+                //TODO("assert that the exit value is 0 (i.e. make the test fail if the docker compose command fails")
             }
         }
 

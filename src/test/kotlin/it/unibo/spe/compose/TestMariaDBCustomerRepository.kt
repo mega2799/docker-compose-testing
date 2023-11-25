@@ -30,23 +30,24 @@ class TestMariaDBCustomerRepository {
 
         @Suppress("UNUSED_PARAMETER")
         private fun findSubstitution(line : String, vararg pairssss:  Array<out Pair<String, String>>) : String{
-            pairssss.map { (k, v) -> 
-                if(line.contains("__"+ k + "__")) {}
+            pairssss.forEach { (p) ->
+                if(line.contains("__"+  p.first  + "__")) {
+                    return line.replace("__"+ p.first + "__", p.second )
+                }
             };
-            return "";
+            return line;
         }
 
         @Suppress("UNUSED_PARAMETER")
         private fun createComposeFile(path: File, vararg assignments: Pair<String, String>): File {
-         //TODO("copy-paste the docker-compose.yml.template file into path, after applying the substitutions in assignments")
          val file = File( object {}.javaClass.getResource("docker-compose.yml.template").file )
          val bufferedReader = file.bufferedReader()
          val text:List<String> = bufferedReader.readLines()
          val substitutedLines = text.map{ line -> this.findSubstitution(line, assignments)}
-         print(substitutedLines);
-            print(path);
-         return File.createTempFile("docker-compose", ".yml");
-
+         val docker = File("docker-compose.yml");
+         docker.createNewFile();
+         docker.writeText(substitutedLines.joinToString("\n"));
+         return docker;
         }
 
         /**
